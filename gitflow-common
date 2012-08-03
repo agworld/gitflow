@@ -178,7 +178,7 @@ gitflow_has_prefixes_configured() {
 gitflow_is_initialized() {
 	gitflow_has_master_configured                    && \
 	gitflow_has_develop_configured                   && \
-	[ "$(git config --get gitflow.branch.master)" !=    \
+	[ "$(git config --get gitflow.branch.master)" =     \
 	  "$(git config --get gitflow.branch.develop)" ] && \
 	gitflow_has_prefixes_configured
 }
