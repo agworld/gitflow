@@ -262,14 +262,9 @@ cmd_finish() {
 	if flag fetch; then
 		git fetch -q "$ORIGIN" "$MASTER_BRANCH" || \
 		  die "Could not fetch $MASTER_BRANCH from $ORIGIN."
-		git fetch -q "$ORIGIN" "$DEVELOP_BRANCH" || \
-		  die "Could not fetch $DEVELOP_BRANCH from $ORIGIN."
 	fi
 	if has "$ORIGIN/$MASTER_BRANCH" $(git_remote_branches); then
 		require_branches_equal "$MASTER_BRANCH" "$ORIGIN/$MASTER_BRANCH"
-	fi
-	if has "$ORIGIN/$DEVELOP_BRANCH" $(git_remote_branches); then
-		require_branches_equal "$DEVELOP_BRANCH" "$ORIGIN/$DEVELOP_BRANCH"
 	fi
 
 	# try to merge into master
@@ -299,28 +294,12 @@ cmd_finish() {
 		fi
 	fi
 
-	# try to merge into develop
-	# in case a previous attempt to finish this release branch has failed,
-	# but the merge into develop was successful, we skip it now
-	if ! git_is_branch_merged_into "$BRANCH" "$DEVELOP_BRANCH"; then
-		git checkout "$DEVELOP_BRANCH" || \
-		  die "Could not check out $DEVELOP_BRANCH."
-
-		# TODO: Actually, accounting for 'git describe' pays, so we should
-		# ideally git merge --no-ff $tagname here, instead!
-		git merge --no-ff "$BRANCH" || \
-		  die "There were merge conflicts."
-		  # TODO: What do we do now?
-	fi
-
 	# delete branch
 	if noflag keep; then
 		git branch -d "$BRANCH"
 	fi
 
 	if flag push; then
-		git push "$ORIGIN" "$DEVELOP_BRANCH" || \
-			die "Could not push to $DEVELOP_BRANCH from $ORIGIN."
 		git push "$ORIGIN" "$MASTER_BRANCH" || \
 			die "Could not push to $MASTER_BRANCH from $ORIGIN."
 		if noflag notag; then
@@ -336,14 +315,13 @@ cmd_finish() {
 	if noflag notag; then
 		echo "- The hotfix was tagged '$VERSION_PREFIX$VERSION'"
 	fi
-	echo "- Hotfix branch has been back-merged into '$DEVELOP_BRANCH'"
 	if flag keep; then
 		echo "- Hotfix branch '$BRANCH' is still available"
 	else
 		echo "- Hotfix branch '$BRANCH' has been deleted"
 	fi
 	if flag push; then
-		echo "- '$DEVELOP_BRANCH', '$MASTER_BRANCH' and tags have been pushed to '$ORIGIN'"
+		echo "- '$MASTER_BRANCH' and tags have been pushed to '$ORIGIN'"
 	fi
 	echo
 }
