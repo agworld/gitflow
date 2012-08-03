@@ -166,15 +166,9 @@ cmd_default() {
 			
 		fi
 
-		printf "Branch name for \"next release\" development: [$default_suggestion] "
-		if noflag defaults; then
-			read answer
-		else
-			printf "\n"
-		fi
-		develop_branch=${answer:-$default_suggestion}
+		develop_branch=$master_branch
 
-		if [ "$master_branch" = "$develop_branch" ]; then
+		if [ "$master_branch" != "$develop_branch" ]; then
 			die "Production and integration branches should differ."
 		fi
 
