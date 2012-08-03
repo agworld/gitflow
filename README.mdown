@@ -5,6 +5,13 @@ A collection of Git extensions to provide high-level repository operations
 for Vincent Driessen's [branching model](http://nvie.com/git-model "original
 blog post").
 
+Agworld variant
+---------------
+
+We've reflowed `git-flow` as follows:
+
+* force develop branch to be same as production branch
+* require 'git flow feature finish' to merge into the current release branch
 
 Getting started
 ---------------
