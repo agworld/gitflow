@@ -230,7 +230,7 @@ cmd_start() {
 }
 
 cmd_finish() {
-  die "Please create a pull request into master, then merge into a release branch and delete this branch when done! #git-reflowed"
+  die "Please create a pull request into the release branch. (Using git flow release start if necessary)."
 
 	DEFINE_boolean fetch false "fetch from $ORIGIN before performing finish" F
 	DEFINE_boolean rebase false "rebase instead of merge" r
